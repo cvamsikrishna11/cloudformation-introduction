@@ -1,0 +1,51 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
+Parameters:
+
+  AMIID:
+    Type: AWS::EC2::Image::Id
+    Default: ami-0022f774911c1d690
+    Description: "AMI ID of the instance"
+
+  InstanceTypeParameter:
+    Type: String
+    Default: t2.nano    
+    Description: "Enter EC2 instance type"
+
+  InstanceKeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: vamsi-chunduru
+    Description: "Select key pair"
+
+  EBSVolumeSize:
+    Type: Number
+    Default: 8
+    Description: "Enter EBS volume size"
+
+
+Resources:
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties: 
+      ImageId: 
+        Ref: AMIID
+      InstanceType: 
+        Ref: InstanceTypeParameter
+      KeyName: 
+        Ref: InstanceKeyPair
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/xvda
+          Ebs:
+            VolumeType: gp2            
+            DeleteOnTermination: true
+            VolumeSize: 
+              Ref: EBSVolumeSize
+      Tags:
+        - Key: Name
+          Value: demo-ec2
+        - Key: createdBy
+          Value: DevOps Team
+        - Key: Learnigns
+          Value: "Tags and Parameters"
