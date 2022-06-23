@@ -52,7 +52,7 @@ Mappings:
   RegionMap: 
     us-east-1:
       HVM64: ami-0ff8a91507f77f867
-      HVMG2: ami-0a584ac55a7631c0c
+      HVMG2: ami-0a584ac55a7631c0c  
     us-west-1:
       HVM64: ami-0bdb828fd58c52235
       HVMG2: ami-066ee5fd4a9ef77f1
@@ -69,12 +69,16 @@ Mappings:
   EC2TypeBasedOnEnv:
     development: 
       instanceType: t2.nano
+      keyName: dev-key
     testing:
       instanceType: t2.micro
+      keyName: tst-key
     acceptance:
       instanceType: t2.small
+      keyName: acc-key
     production:
       instanceType: t2.medium
+      keyName: prod-key
 
 Resources:
   EC2Instance:
@@ -85,7 +89,7 @@ Resources:
       SecurityGroups:
       - Ref: InstanceSecurityGroup
       KeyName:
-        Ref: KeyName      
+        Ref: !FindInMap [EC2TypeBasedOnEnv, !Ref Environment, keyName]      
       BlockDeviceMappings:
         -
           DeviceName: /dev/xvda

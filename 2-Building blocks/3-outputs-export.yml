@@ -38,7 +38,7 @@ Resources:
 
 Outputs:
   SecurityGroupId:
-    Description: Public IP address of the newly created EC2 instance
+    Description: security group id value
     Value: !GetAtt 
       - InstanceSecurityGroup
       - GroupId

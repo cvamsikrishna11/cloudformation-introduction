@@ -8,7 +8,7 @@ Description: 'Cloudformation template to create EC2 instance with parameteres'
 
 Parameters:
   BucketName:
-    Type: String   
+    Type: String
 
 Resources: 
   S3Bucket:

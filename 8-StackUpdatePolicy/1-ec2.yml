@@ -1,14 +1,19 @@
+#  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html?icmpid=docs_cfn_console
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html#stack-policy-intro-example
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Cloudformation template to create EC2 instance'
 Parameters:
   InstanceType:
       Description: WebServer EC2 instance type
       Type: String
-      Default: "t2.micro"
+      Default: 't2.micro'
+      ConstraintDescription: must be a valid EC2 instance type.
 
-  AMIID:
+  AMIID:  
     Description: The EC2 AMI id
-    Type: String      
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
     ConstraintDescription: Must be a valid AMI based on the region
 
   VolumeSize:
@@ -42,7 +47,7 @@ Parameters:
     ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
 
 Resources:
-  EC2Instance:
+  WebSever:
     Type: AWS::EC2::Instance
     Properties:
       ImageId:
@@ -61,6 +66,11 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: !Ref VolumeSize
   
+  InstanceElasticIP:    
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref WebSever
+  
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -71,4 +81,32 @@ Resources:
         ToPort: !Ref SecurityGroupPorts
         CidrIp:
           Ref: SSHLocation
+    
+  S3Bucket:
+    Type: AWS::S3::Bucket
 
+Outputs:
+  InstanceDetails:
+    Description: "EC2 Instance details"
+    Value: 
+      Ref : WebSever
+  AZ:
+    Description: Availability Zone of the newly created EC2 instance
+    Value: !GetAtt 
+      - WebSever
+      - AvailabilityZone
+  PublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value: !GetAtt 
+      - WebSever
+      - PublicDnsName      
+  PublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt 
+      - WebSever
+      - PublicIp
+  SecurityGroupId:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt 
+      - InstanceSecurityGroup
+      - GroupId

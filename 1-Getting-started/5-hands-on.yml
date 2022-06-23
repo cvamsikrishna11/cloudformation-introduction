@@ -4,6 +4,11 @@
 # Appserver with 10gb EBS
 # One S3 bucket to store invoice pdf files
 
+Parameters:
+  EC2InstanceType:
+    Type: String
+    Default: "t2.micro"
+    Description: "put required ec2 instance type, default is t2.micro"  
 
 Resources:
   WebServer:
@@ -17,14 +22,14 @@ Resources:
           DeleteOnTermination: true
           VolumeSize: 8
       ImageId: "ami-0022f774911c1d690"
-      InstanceType: "t2.micro"
+      InstanceType: !Ref EC2InstanceType
       KeyName: "LinuxServer"      
       
   AppServer:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: "ami-0022f774911c1d690"
-      InstanceType: "t2.micro"
+      InstanceType: !Ref EC2InstanceType
       KeyName: "LinuxServer"
       BlockDeviceMappings: 
       - DeviceName: "/dev/sdm"
@@ -33,10 +38,8 @@ Resources:
           Iops: 100
           DeleteOnTermination: true
           VolumeSize: 10
+
   InvoiceS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: "PublicRead"
-
-      
-

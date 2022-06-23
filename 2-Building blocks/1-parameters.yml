@@ -88,4 +88,3 @@ Resources:
         ToPort: !Ref SecurityGroupPorts
         CidrIp:
           Ref: SSHLocation
-
