@@ -26,11 +26,6 @@ Parameters:
     MaxValue: 100
     ConstraintDescription: must be a number between 8 to 100 Gb
 
-  KeyName:
-    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
-    Type: AWS::EC2::KeyPair::KeyName
-    ConstraintDescription: must be the name of an existing EC2 KeyPair.  
-  
   SecurityGroupPorts:
     Description: Simple Description of a Number Parameter, with MinValue and MaxValue
     Type: Number
@@ -85,11 +80,10 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", HVM64]
-      InstanceType:  !FindInMap [EC2TypeBasedOnEnv, !Ref Environment, instanceType]
+      InstanceType: !FindInMap [EC2TypeBasedOnEnv, !Ref Environment, instanceType]
       SecurityGroups:
       - Ref: InstanceSecurityGroup
-      KeyName:
-        Ref: !FindInMap [EC2TypeBasedOnEnv, !Ref Environment, keyName]      
+      KeyName: !FindInMap [EC2TypeBasedOnEnv, !Ref Environment, keyName]      
       BlockDeviceMappings:
         -
           DeviceName: /dev/xvda

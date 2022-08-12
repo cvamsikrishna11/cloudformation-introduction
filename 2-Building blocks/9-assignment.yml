@@ -1,0 +1,26 @@
+Parameters:
+  Environments:
+    Type: String
+    Default: "development"
+    AllowedValues:
+      - development
+      - testing
+      - staging
+      - production
+
+Mappings:
+  BucketNamesMap:
+    development: 
+      BucketName: "vamsi-dev-87634"
+    testing: 
+      BucketName: "vamsi-test-87634"
+    staging: 
+      BucketName: "vamsi-stage-87634"
+    production: 
+      BucketName: "vamsi-prod-87634"
+
+Resources: 
+  InvoiceBucket: 
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !FindInMap [ BucketNamesMap, !Ref Environments, BucketName]
